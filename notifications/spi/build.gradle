@@ -121,8 +121,7 @@ configurations.all {
         force "org.apache.httpcomponents:httpcore:4.4.13" // resolve for awssdk:ses
 
         // Resolve for awssdk:sns
-        //force "joda-time:joda-time:2.8.1"
-        force "joda-time:joda-time:2.10.4"
+        force "joda-time:joda-time:2.8.1"
         force "com.fasterxml.jackson.dataformat:jackson-dataformat-cbor:2.12.3"
         force "com.fasterxml.jackson.core:jackson-core:2.12.3"
         force "com.fasterxml.jackson.dataformat:jackson-dataformat-smile:2.12.3"
@@ -137,14 +136,7 @@ dependencies {
     compileOnly "org.jetbrains.kotlin:kotlin-stdlib-common:${kotlin_version}"
     compile "org.apache.httpcomponents:httpcore:4.4.5"
     compile "org.apache.httpcomponents:httpclient:4.5.10"
-    compile "com.amazonaws:aws-java-sdk-sns:${aws_version}" /*{
-        exclude module: 'joda-time'
-        exclude module: "jackson-dataformat-cbor"
-        exclude module: "jackson-core"
-        exclude module: "jackson-dataformat-smile"
-        exclude module: "jackson-dataformat-yaml"
-        exclude module: "jackson-databind"
-    } */
+    compile "com.amazonaws:aws-java-sdk-sns:${aws_version}"
     ktlint "com.pinterest:ktlint:0.41.0"
     //TODO: Add it back and remove from main project(to avoid jarhell) when implementing Email functionality
 //    compile ("software.amazon.awssdk:ses:2.14.16") {
@@ -179,11 +171,11 @@ dependencies {
 
 shadowJar {
     // fix jarhell by relocating packages
+    relocate 'org.joda.time', 'org.opensearch.notifications.repackage.org.joda.time'
     relocate 'com.fasterxml.jackson', 'org.opensearch.notifications.repackage.com.fasterxml.jackson'
     relocate 'org.apache.http', 'org.opensearch.notifications.repackage.org.apache.http'
     relocate 'org.apache.commons.logging', 'org.opensearch.notifications.repackage.org.apache.commons.logging'
     relocate 'org.apache.commons.codec', 'org.opensearch.notifications.repackage.org.apache.commons.codec'
-    relocate 'org.joda.time', 'org.opensearch.notifications.repackage.org.joda.time'
     classifier = null
 }
 

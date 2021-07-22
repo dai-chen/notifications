@@ -31,7 +31,7 @@ class DestinationSNSClient(destination: SNSDestination) {
                               .build()
 
     fun execute(topicArn: String, message: MessageContent): String {
-        val result = amazonSNS.publish(topicArn, message.fileData, message.title) //TODO: check title is null
+        val result = amazonSNS.publish(topicArn, message.textDescription, message.title) //TODO: check title is null
         return result.messageId //TODO: return what?
     }
 
