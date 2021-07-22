@@ -119,6 +119,15 @@ configurations.all {
         force "io.netty:netty-handler:4.1.63.Final" // resolve for awssdk:ses
         force "org.apache.httpcomponents:httpclient:4.5.10" // resolve for awssdk:ses
         force "org.apache.httpcomponents:httpcore:4.4.13" // resolve for awssdk:ses
+
+        // Resolve for awssdk:sns
+        //force "joda-time:joda-time:2.8.1"
+        force "joda-time:joda-time:2.10.4"
+        force "com.fasterxml.jackson.dataformat:jackson-dataformat-cbor:2.12.3"
+        force "com.fasterxml.jackson.core:jackson-core:2.12.3"
+        force "com.fasterxml.jackson.dataformat:jackson-dataformat-smile:2.12.3"
+        force "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.12.3"
+        force "junit:junit:4.12"
     }
 }
 
@@ -128,6 +137,14 @@ dependencies {
     compileOnly "org.jetbrains.kotlin:kotlin-stdlib-common:${kotlin_version}"
     compile "org.apache.httpcomponents:httpcore:4.4.5"
     compile "org.apache.httpcomponents:httpclient:4.5.10"
+    compile "com.amazonaws:aws-java-sdk-sns:${aws_version}" /*{
+        exclude module: 'joda-time'
+        exclude module: "jackson-dataformat-cbor"
+        exclude module: "jackson-core"
+        exclude module: "jackson-dataformat-smile"
+        exclude module: "jackson-dataformat-yaml"
+        exclude module: "jackson-databind"
+    } */
     ktlint "com.pinterest:ktlint:0.41.0"
     //TODO: Add it back and remove from main project(to avoid jarhell) when implementing Email functionality
 //    compile ("software.amazon.awssdk:ses:2.14.16") {
@@ -141,19 +158,32 @@ dependencies {
             "org.easymock:easymock:4.0.1",
             "org.apache.logging.log4j:log4j-core:${versions.log4j}",
             "org.opensearch.test:framework:${opensearch_version}",
+            'io.mockk:mockk:1.11.0',
+            'io.mockk:mockk-common:1.11.0',
+            'io.mockk:mockk-dsl:1.11.0',
+            'io.mockk:mockk-dsl-jvm:1.11.0',
+            'io.mockk:mockk-agent-api:1.11.0',
+            'io.mockk:mockk-agent-common:1.11.0',
+            'io.mockk:mockk-agent-jvm:1.11.0',
+            //'net.bytebuddy:byte-buddy:1.10.0', // required by mockk for final class mock
+            'com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0',
+            "org.jetbrains.kotlin:kotlin-reflect:${kotlin_version}", // required by mockk
     )
     testImplementation 'org.springframework.integration:spring-integration-mail:5.5.0'
     testImplementation 'org.springframework.integration:spring-integration-test-support:5.5.0'
     testRuntime('org.junit.jupiter:junit-jupiter-engine:5.6.2')
     testCompile "org.jetbrains.kotlin:kotlin-test:${kotlin_version}"
+    testCompile "org.mockito:mockito-core:3.10.0"
+    //testCompile "org.mockito:mockito-inline:3.10.0"
 }
 
 shadowJar {
     // fix jarhell by relocating packages
-    relocate 'com.fasterxml.jackson.core', 'org.opensearch.notifications.repackage.com.fasterxml.jackson.core'
+    relocate 'com.fasterxml.jackson', 'org.opensearch.notifications.repackage.com.fasterxml.jackson'
     relocate 'org.apache.http', 'org.opensearch.notifications.repackage.org.apache.http'
     relocate 'org.apache.commons.logging', 'org.opensearch.notifications.repackage.org.apache.commons.logging'
     relocate 'org.apache.commons.codec', 'org.opensearch.notifications.repackage.org.apache.commons.codec'
+    relocate 'org.joda.time', 'org.opensearch.notifications.repackage.org.joda.time'
     classifier = null
 }
 
